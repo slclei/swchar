@@ -1,3 +1,11 @@
+'''
+This is Star_war_char class. It is used to get user's input as a parameter to search from swapi, and store results in its's parameters.
+APIs:
+Star_war_char.get_chars(name): take character's name as input. Store names from search in ascent order, and requried information in a dictionary (name as the key).
+Star_war_char.get_starship(url): take star ship's url as input. Return required information from star ship in a list. 
+Star_war_char.get_home_planet(url): take home planet's url as input. Return required information from home planet in a list. 
+Star_war_char.get_species(url): take species ship's url as input. Return required information from species in a list. 
+'''
 import requests
 import json
 
