@@ -22,7 +22,6 @@ class Star_war_char:
         if response.status_code == 200:
             # Store results
             results=json.loads(response.content.decode())['results']
-            print(len(results))
             
             # Loop in results to get information from each character
             for result in results:
@@ -66,7 +65,6 @@ class Star_war_char:
 
             # sort name list
             self.name.sort()
-            print(self.chars,len(self.name))
 
         else:
             # Print an error message

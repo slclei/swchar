@@ -60,7 +60,12 @@ class GUI:
             
             # Handle no characters back
             if len(chars.name)==0:
-                 output.append([sg.Text("Sorry, there is no characters containing "+self.input)])
+                output.append([sg.Text("Sorry, there is no characters containing: "+self.input)])
+                return output
+            
+            if chars.error!="":
+                output.append([sg.Text("Sorry, there is an error: "+chars.error)])
+                return output
 
             # Get all results names in alphabetical order
             rows=[]
