@@ -22,6 +22,7 @@ class Star_war_char:
         if response.status_code == 200:
             # Store results
             results=json.loads(response.content.decode())['results']
+            print(len(results))
             
             # Loop in results to get information from each character
             for result in results:
@@ -30,22 +31,34 @@ class Star_war_char:
 
                 # Get star ships for this character, list with urls to star shpis
                 ships_urls=result['starships']
-                # Get each star ship information
-                ships=[]
-                for ships_url in ships_urls:
-                    ships.append(self.get_starship(ships_url))
+                # In case of empty star ship, set ships to be default
+                if ships_urls==[]:
+                    ships=['Not Provided']*3
+                else:
+                    # Get each star ship information
+                    ships=[]
+                    for ships_url in ships_urls:
+                        ships.append(self.get_starship(ships_url))
 
                 # Get home planet for this character, url to home planet
                 home_planet_url=result['homeworld']
-                # Get home planet information
-                home=self.get_home_planet(home_planet_url)
+                # In case of empty hom planet, set home to be default
+                if home_planet_url=="":
+                    home=['Not Provided']*3
+                else:
+                    # Get home planet information
+                    home=self.get_home_planet(home_planet_url)
 
                 # Get species, list with urls to species
                 species_urls=result['species']
-                # Get each species informaiton
-                species=[]
-                for species_url in species_urls:
-                    species.append(self.get_species(species_url))
+                # In case of empty species, set species to be default
+                if species_urls==[]:
+                    species=['Not provided']*3
+                else:
+                    # Get each species informaiton
+                    species=[]
+                    for species_url in species_urls:
+                        species.append(self.get_species(species_url))
 
                 # Add this character to chars list
                 self.chars[name]=[ships,[home],species]
@@ -53,7 +66,7 @@ class Star_war_char:
 
             # sort name list
             self.name.sort()
-            print(self.name)
+            print(self.chars,len(self.name))
 
         else:
             # Print an error message
@@ -62,30 +75,65 @@ class Star_war_char:
     # Get starship information
     # Return: [starship name, cargo capacity, starship class]
     def get_starship(self,url):
+        # Return results. Default value is 'not provided'. 
+        res=['Not Provided']*3
+
         # Get response from url
         response = requests.get(url)
         # Get information in dictionary
         results=json.loads(response.content.decode())
-        # Return results
-        return [results['name'],results['cargo_capacity'],results['starship_class']]
+        
+        # Update value only if the value is provided
+        if results['name']!='':
+            res[0]=results['name']
+        if results['cargo_capacity']!='':
+            res[1]=results['cargo_capacity']
+        if results['starship_class']!='':
+            res[2]=results['starship_class']
+
+        return res
 
 
     # Get home planet information
     # Return: [planet name, population, climate]
     def get_home_planet(self,url):
+        # Return results. Default value is 'not provided'. 
+        res=['Not Provided']*3
+        
         # Get response from url
         response = requests.get(url)
         # Get information in dictionary
         results=json.loads(response.content.decode())
+
+        # Update value only if the value is provided
+        if results['name']!='':
+            res[0]=results['name']
+        if results['population']!='':
+            res[1]=results['population']
+        if results['climate']!='':
+            res[2]=results['climate']
+
         # Return results
-        return [results['name'],results['population'],results['climate']]
+        return res
 
     # Get species information
     # Return: [Name, language, average lifespan]
     def get_species(self,url):
+        # Return results. Default value is 'not provided'. 
+        res=['Not Provided']*3
+        
         # Get response from url
         response = requests.get(url)
         # Get information in dictionary
         results=json.loads(response.content.decode())
+
+        # Update value only if the value is provided
+        if results['name']!='':
+            res[0]=results['name']
+        if results['language']!='':
+            res[1]=results['language']
+        if results['average_lifespan']!='':
+            res[2]=results['average_lifespan']
+
         # Return results
-        return [results['name'],results['language'],results['average_lifespan']]
+        return res

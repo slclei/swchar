@@ -9,13 +9,13 @@ class GUI:
         self.results=[]
         self.column=[]
         self.input_layout=[[sg.Text("Please input character name you want to search:")],
-                [sg.Input(key='-INPUT-'),sg.Button('Submit'), sg.Button('Quit')],
-                [sg.Frame('Results',[[sg.T('')]], key='-FRAME-')]]
+                [sg.Input(key='-INPUT-'),sg.Button('Submit'), sg.Button('Quit')]]
         self.output_layout=[]
+        self.count=0
         
     def build(self):
         # Create the window
-        window = sg.Window('Star War series - character', self.input_layout,size=(1000, 1000))
+        window = sg.Window('Star War series - character', self.input_layout,size=(1000, 500))
 
         # Display and interact with the Window using an Event Loop
         while True:
@@ -31,23 +31,37 @@ class GUI:
             # See if user wants to submit a task
             if event == 'Submit':
                 window.refresh()
-                # Start searching
-                self.search()
-                #window.refresh()
-                window.extend_layout(window['-FRAME-'],self.output_layout)
+                # Start searching only if input is valid
+                search_result=[]
+
+                search_result=self.search()
+
+                # Increase the count for key name
+                self.count+=1
+                    
+                #window.extend_layout(window['-FRAME-'],self.output_layout)
+
+                window.close()
+                window = sg.Window('Star War series - characters with '+self.input, search_result,size=(1000, 500))
 
         # Finish up by removing from the screen
         window.close()
 
     # Search for user's input
     def search(self):
-        # Only start with valid input
-        if self.input!="":
             # Create an object for characters
             chars=star_war_char.Star_war_char()
             # Search for results
             chars.get_chars(self.input)
+
+            # Define a new layout
+            output=[[sg.Text("Please input character name you want to search:")],
+                [sg.Input(key='-INPUT-'),sg.Button('Submit'), sg.Button('Quit')]]
             
+            # Handle no characters back
+            if len(chars.name)==0:
+                 output.append([sg.Text("Sorry, there is no characters containing "+self.input)])
+
             # Get all results names in alphabetical order
             rows=[]
             for name in chars.name:
@@ -68,7 +82,9 @@ class GUI:
 
                 #for layout in [name_layout,ships_layout,home_layout,species_layout]:
                     #self.output_layout.append(layout)
-            self.output_layout.append([sg.Column(rows, key='-OUTPUT-', scrollable=True,  vertical_scroll_only=True,size=(1000,800))])
+            output.append([sg.Column(rows, key=str(self.count), scrollable=True,  vertical_scroll_only=True,size=(1000,800))])
+
+            return output
             
 
 
