@@ -7,33 +7,34 @@ class GUI:
         self.output=""
         self.input=""
         self.results=[]
-        pass
-
+        self.column=[]
+        self.input_layout=[[sg.Text("Please input character name you want to search:")],
+                [sg.Input(key='-INPUT-'),sg.Button('Submit'), sg.Button('Quit')],
+                [sg.Frame('Results',[[sg.T('')]], key='-FRAME-')]]
+        self.output_layout=[]
+        
     def build(self):
-        # Define the window's contents
-        layout = [[sg.Text("Please input character name you want to search:")],
-                [sg.Input(key='-INPUT-')],
-                [sg.Text(size=(40,40), key='-OUTPUT-')],
-                [sg.Button('Submit'), sg.Button('Quit')]]
-
         # Create the window
-        window = sg.Window('Star War series - character', layout)
+        window = sg.Window('Star War series - character', self.input_layout,size=(1000, 1000))
 
         # Display and interact with the Window using an Event Loop
         while True:
              # Get evetn and values. values['-INPUT-']
             event, values = window.read()
             # Get user's input
-            self.input=values['-INPUT-']
-            # Start searching
-            self.search()
+            self.input=values['-INPUT-']            
 
             # See if user wants to quit or window was closed
             if event == sg.WINDOW_CLOSED or event == 'Quit':
                 break
 
-            # Output a message to the window
-            window['-OUTPUT-'].update(self.output)
+            # See if user wants to submit a task
+            if event == 'Submit':
+                window.refresh()
+                # Start searching
+                self.search()
+                #window.refresh()
+                window.extend_layout(window['-FRAME-'],self.output_layout)
 
         # Finish up by removing from the screen
         window.close()
@@ -44,6 +45,44 @@ class GUI:
         if self.input!="":
             # Create an object for characters
             chars=star_war_char.Star_war_char()
+            # Search for results
             chars.get_chars(self.input)
-            self.output=chars.chars
+            
+            # Get all results names in alphabetical order
+            rows=[]
+            for name in chars.name:
+                # Get star ships
+                ships=chars.chars[name][0]
+                # Get home planet
+                home_planet=chars.chars[name][1]
+                # Get species
+                species=chars.chars[name][2]
 
+                name_layout=[sg.Text("Character Name: "+name,key=name)]
+                ships_layout=[sg.Table(values=ships, headings=['Starship Name','Starship Cargo Capacity','Starship class'],justification='left',size=(40,2),key="ship"+name)]
+                home_layout=[sg.Table(values=home_planet, headings=['Home Planet Name', 'Home Planet Population', 'Home Planet Climate'],justification='left',size=(40,2),key="home"+name)]
+                species_layout=[sg.Table(values=species, headings=['Species Name','Species Language','Species Lifespan'],justification='left',size=(40,2),key="species"+name)]
+                
+                column=[name_layout,ships_layout,home_layout,species_layout]
+                rows+=column
+
+                #for layout in [name_layout,ships_layout,home_layout,species_layout]:
+                    #self.output_layout.append(layout)
+            self.output_layout.append([sg.Column(rows, key='-OUTPUT-', scrollable=True,  vertical_scroll_only=True,size=(1000,800))])
+            
+
+
+
+'''
+column = [
+    [sg.Frame(f'AI-{i}', frame(), pad=(0, 0), key=f'FRAME {i}')]
+        for i in range(1, 11)
+]
+
+[
+        [sg.Text('OK:'),         sg.Push(), Text(10)],
+        [sg.Text('NG:'),         sg.Push(), Text(10)],
+        [sg.Text('Yield Rate:'), sg.Push(), Text(15)],
+        [sg.Text('Total:'),      sg.Push(), Text(15)],
+    ]
+    '''

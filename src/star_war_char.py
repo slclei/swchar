@@ -48,7 +48,7 @@ class Star_war_char:
                     species.append(self.get_species(species_url))
 
                 # Add this character to chars list
-                self.chars[name]=[ships,home,species]
+                self.chars[name]=[ships,[home],species]
                 self.name.append(name)
 
             # sort name list
