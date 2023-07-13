@@ -77,3 +77,5 @@ Notice that:
 2 Change the appearance of the application, like colors and background.
 
 3 Add more features.
+
+4 Add tests.
