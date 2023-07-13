@@ -68,6 +68,8 @@ Notice that:
 
 2 "Not provided" is not display in a correct way.
 
+3 Search time is long (5-10 sections). This time is also limited by [Star Wars API](https://swapi.dev/).
+
 ## Next steps
 
 1 Fix [known issues](#known-issues).
