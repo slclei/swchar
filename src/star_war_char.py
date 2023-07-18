@@ -32,7 +32,7 @@ class Star_war_char:
                 ships_urls=result['starships']
                 # In case of empty star ship, set ships to be default
                 if ships_urls==[]:
-                    ships=['Not Provided']*3
+                    ships=[['Not Provided']*3]
                 else:
                     # Get each star ship information
                     ships=[]
@@ -43,7 +43,7 @@ class Star_war_char:
                 home_planet_url=result['homeworld']
                 # In case of empty hom planet, set home to be default
                 if home_planet_url=="":
-                    home=['Not Provided']*3
+                    home=[['Not Provided']*3]
                 else:
                     # Get home planet information
                     home=self.get_home_planet(home_planet_url)
@@ -52,7 +52,7 @@ class Star_war_char:
                 species_urls=result['species']
                 # In case of empty species, set species to be default
                 if species_urls==[]:
-                    species=['Not provided']*3
+                    species=[['Not provided']*3]
                 else:
                     # Get each species informaiton
                     species=[]
