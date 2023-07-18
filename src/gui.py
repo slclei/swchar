@@ -1,16 +1,26 @@
+'''
+This is the GUI class to build a gui for this application.
+It has parameters to store user's input, layout for configuration gui.
+API:
+GUI.build(): make window for gui, record user's input, pass input to GUI.search() and use the returned layout to make new window to display results
+GUI.search(): pass user's input to and get result from Star_warChar class, return a new layout to display results.
+'''
+
+
 # REF: https://github.com/PySimpleGUI/PySimpleGUI
 import PySimpleGUI as sg
 import star_war_char
 
 class GUI:
     def __init__(self):
+        # output is used to record output in gui
         self.output=""
+        # input is used to record user's input from gui
         self.input=""
-        self.results=[]
-        self.column=[]
+        # input_layout is used to configure layout from start point
         self.input_layout=[[sg.Text("Please input character name you want to search:")],
                 [sg.Input(key='-INPUT-'),sg.Button('Submit'), sg.Button('Quit')]]
-        self.output_layout=[]
+        # count is used as key of different layouts generated from different user's inputs
         self.count=0
         
     def build(self):
@@ -38,9 +48,8 @@ class GUI:
 
                 # Increase the count for key name
                 self.count+=1
-                    
-                #window.extend_layout(window['-FRAME-'],self.output_layout)
 
+                # Make new windown with new layout generated with user's input and search result
                 window.close()
                 window = sg.Window('Star War series - characters with '+self.input, search_result,size=(1000, 500))
 
@@ -63,6 +72,7 @@ class GUI:
                 output.append([sg.Text("Sorry, there is no characters containing: "+self.input)])
                 return output
             
+            # Handle error if an error is produced from searching
             if chars.error!="":
                 output.append([sg.Text("Sorry, there is an error: "+chars.error)])
                 return output
@@ -77,33 +87,18 @@ class GUI:
                 # Get species
                 species=chars.chars[name][2]
 
+                # Configure layouts for different sections
                 name_layout=[sg.Text("Character Name: "+name,key=name)]
                 ships_layout=[sg.Table(values=ships, headings=['Starship Name','Starship Cargo Capacity','Starship class'],justification='left',size=(40,2),key="ship"+name)]
                 home_layout=[sg.Table(values=home_planet, headings=['Home Planet Name', 'Home Planet Population', 'Home Planet Climate'],justification='left',size=(40,2),key="home"+name)]
                 species_layout=[sg.Table(values=species, headings=['Species Name','Species Language','Species Lifespan'],justification='left',size=(40,2),key="species"+name)]
                 
+                # Configure column for making window later
                 column=[name_layout,ships_layout,home_layout,species_layout]
                 rows+=column
 
-                #for layout in [name_layout,ships_layout,home_layout,species_layout]:
-                    #self.output_layout.append(layout)
+            # Configure layout with columns
             output.append([sg.Column(rows, key=str(self.count), scrollable=True,  vertical_scroll_only=True,size=(1000,800))])
 
             return output
             
-
-
-
-'''
-column = [
-    [sg.Frame(f'AI-{i}', frame(), pad=(0, 0), key=f'FRAME {i}')]
-        for i in range(1, 11)
-]
-
-[
-        [sg.Text('OK:'),         sg.Push(), Text(10)],
-        [sg.Text('NG:'),         sg.Push(), Text(10)],
-        [sg.Text('Yield Rate:'), sg.Push(), Text(15)],
-        [sg.Text('Total:'),      sg.Push(), Text(15)],
-    ]
-    '''
